@@ -14,3 +14,5 @@ dependencyResolutionManagement {
 }
 rootProject.name = "FlickrDemoApp"
 include ':app'
+include ':data:flickr-network'
+include ':core:domain'
