@@ -1,4 +1,4 @@
-package com.leverx.flickrdemoapp.presentation.search
+package com.leverx.flickrdemoapp.presentation.history
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,13 +24,12 @@ import androidx.wear.compose.material.items
 import androidx.wear.compose.material.rememberScalingLazyListState
 import androidx.wear.compose.material.scrollAway
 import coil.compose.AsyncImage
-import com.leverx.search.models.SearchScreenUiState
+import com.leverx.history.models.HistoryScreenUiState
 
 @Composable
-fun SearchScreen(
+fun HistoryScreen(
     modifier: Modifier = Modifier,
-    uiState: SearchScreenUiState,
-    onPhotoClicked: (String) -> Unit
+    uiState: HistoryScreenUiState
 ) {
     val listState = rememberScalingLazyListState()
 
@@ -44,15 +43,15 @@ fun SearchScreen(
         }
     ) {
         ScalingLazyColumn(
-            modifier = Modifier.fillMaxSize(),
+            modifier = modifier.fillMaxSize(),
             autoCentering = AutoCenteringParams(itemIndex = 1),
             state = listState
         ) {
-            items(items = uiState.photoList, key = { it.id }) { photo ->
+            items(items = uiState.photoList, key = { it.id }) { item ->
                 AsyncImage(
-                    model = photo.url,
+                    model = item.url,
                     contentDescription = null,
-//                    contentDescription = "${stringResource(com.leverx.search.R.string.photo_list_item)} ${photo.id}",
+//                    contentDescription = "${stringResource(com.leverx.search.R.string.photo_list_item)} ${item.id}",
                     placeholder = painterResource(id = com.leverx.common.R.drawable.placeholder),
                     error = painterResource(id = com.leverx.common.R.drawable.error),
                     filterQuality = FilterQuality.Low,
@@ -60,8 +59,7 @@ fun SearchScreen(
                     modifier = Modifier
                         .clip(RoundedCornerShape(8.dp))
                         .clickable {
-                            onPhotoClicked(photo.id)
-                            println("Photo clicked ${photo.id}")
+                            println("Photo clicked ${item.id}")
                         }
                 )
             }

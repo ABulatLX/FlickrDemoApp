@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    @FlickrPhotoApi private val repository: PhotoRepository
+    @FlickrPhotoApi private val photoRepository: PhotoRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SearchScreenUiState(isLoading = true))
@@ -32,7 +32,7 @@ class SearchViewModel @Inject constructor(
         _uiState.value = _uiState.value.copy(isLoading = true)
 
         viewModelScope.launch {
-            repository.getPhotosBySearch(searchQuery)
+            photoRepository.getPhotosBySearch(searchQuery)
                 .fold(
                     onSuccess = { photoList ->
                         _uiState.value = _uiState.value.copy(
@@ -40,6 +40,20 @@ class SearchViewModel @Inject constructor(
                             isLoading = false,
                             error = ""
                         )
+                    },
+                    onFailure = { error ->
+                        updateErrorState(error.localizedMessage ?: "")
+                    }
+                )
+        }
+    }
+
+    fun viewPhoto(photoId: String) {
+        viewModelScope.launch {
+            photoRepository.viewPhoto(photoId)
+                .fold(
+                    onSuccess = { photo ->
+                        println("Viewed photo updated: $photo")
                     },
                     onFailure = { error ->
                         updateErrorState(error.localizedMessage ?: "")

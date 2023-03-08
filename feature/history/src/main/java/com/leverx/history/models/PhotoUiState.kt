@@ -1,4 +1,4 @@
-package com.leverx.search.models
+package com.leverx.history.models
 
 import com.leverx.photo.Photo
 

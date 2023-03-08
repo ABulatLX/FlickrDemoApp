@@ -1,12 +1,22 @@
 package com.leverx.flickrNetwork
 
+import com.leverx.flickrNetwork.models.PhotoDto
 import com.leverx.flickrNetwork.models.PhotosListDto
 import com.leverx.flickrNetwork.models.REQUEST_STAT_OK
 import javax.inject.Inject
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 
 internal interface FlickrNetworkDataSource {
 
     suspend fun getPhotosBySearch(searchParam: String): Result<PhotosListDto>
+
+    //FAKE API
+    suspend fun viewPhoto(photoId: String): Result<PhotoDto>
+    suspend fun getPhotoById(photoId: String): Result<PhotoDto>
+    suspend fun getPhotosHistoryByViews(): Result<List<PhotoDto>>
+
+    fun getPhotosHistoryFlow(): Flow<List<PhotoDto>>
 }
 
 internal class FlickrNetworkDataSourceImpl @Inject constructor(
@@ -16,6 +26,8 @@ internal class FlickrNetworkDataSourceImpl @Inject constructor(
     override suspend fun getPhotosBySearch(searchParam: String): Result<PhotosListDto> {
         return executeCatching {
             flickrApi.getPhotosBySearch(searchParam)
+        }.also { result ->      //TODO remove also block after fake api removal
+            result.getOrNull()?.let { viewedPhotos.addAll(it.photosPage.photosList) }
         }
     }
 
@@ -30,5 +42,40 @@ internal class FlickrNetworkDataSourceImpl @Inject constructor(
         } catch (e: Throwable) {
             Result.failure(e)
         }
+    }
+
+    //FAKE API
+    private val viewedPhotos = mutableListOf<PhotoDto>()
+    private val viewedPhotosHistory = mutableListOf<PhotoDto>()
+    private val viewedPhotosHistoryFlow = MutableSharedFlow<List<PhotoDto>>(replay = 1)
+    override suspend fun viewPhoto(photoId: String): Result<PhotoDto> {
+        return runCatching {
+            val viewedPhoto = viewedPhotosHistory.find { it.id == photoId }
+                ?: viewedPhotos.find { it.id == photoId }!!
+            val updatedViewedPhoto = viewedPhoto.copy(views = viewedPhoto.views + 1)
+            viewedPhotosHistory.remove(viewedPhoto)
+            viewedPhotosHistory.add(updatedViewedPhoto)
+            viewedPhotosHistoryFlow.emit(viewedPhotosHistory.reversed())
+            updatedViewedPhoto
+        }.also {
+            println(it.getOrNull())
+        }
+    }
+
+    override suspend fun getPhotoById(photoId: String): Result<PhotoDto> {
+        return runCatching {
+            viewedPhotosHistory.find { it.id == photoId }
+                ?: viewedPhotos.find { it.id == photoId }!!
+        }
+    }
+
+    override suspend fun getPhotosHistoryByViews(): Result<List<PhotoDto>> {
+        return runCatching {
+            viewedPhotosHistory.reversed()
+        }
+    }
+
+    override fun getPhotosHistoryFlow(): Flow<List<PhotoDto>> {
+        return viewedPhotosHistoryFlow
     }
 }

@@ -4,4 +4,5 @@
     <string name="retry_text">Retry</string>
     <string name="loading_error_description">Loading photos error icon</string>
     <string name="scroll_to_top_icon">Scroll to top icon</string>
+    <string name="photo_list_item">Photo in list</string>
 </resources>

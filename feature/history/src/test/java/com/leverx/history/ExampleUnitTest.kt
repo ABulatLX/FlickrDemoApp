@@ -1,4 +1,4 @@
-package com.leverx.navigation
+package com.leverx.history
 
 import org.junit.Test
 
