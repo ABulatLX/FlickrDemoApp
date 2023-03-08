@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_search">Search</string>
+    <string name="retry_text">Retry</string>
+    <string name="loading_error_description">Loading photos error icon</string>
+    <string name="scroll_to_top_icon">Scroll to top icon</string>
+</resources>

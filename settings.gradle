@@ -16,3 +16,6 @@ rootProject.name = "FlickrDemoApp"
 include ':app'
 include ':data:flickr-network'
 include ':core:domain'
+include ':feature:search'
+include ':core:navigation'
+include ':core:common'
