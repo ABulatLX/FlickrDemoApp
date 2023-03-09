@@ -24,18 +24,6 @@ internal class FlickrPhotoRepository @Inject constructor(
             .map { it.toDomain() }
     }
 
-    override suspend fun getPhotoById(photoId: String): Result<Photo> {
-        return dataSource.getPhotoById(photoId)
-            .map { it.toDomain() }
-    }
-
-    override suspend fun getPhotosHistoryByViews(): Result<List<Photo>> {
-        return dataSource.getPhotosHistoryByViews()
-            .map { dto ->
-                dto.map { it.toDomain() }
-            }
-    }
-
     override fun getPhotosHistoryFlow(): Flow<List<Photo>> {
         return dataSource.getPhotosHistoryFlow()
             .map { dtos ->

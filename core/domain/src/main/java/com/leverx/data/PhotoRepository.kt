@@ -9,8 +9,5 @@ interface PhotoRepository {
 
     //FAKE API
     suspend fun viewPhoto(photoId: String): Result<Photo>
-    suspend fun getPhotoById(photoId: String): Result<Photo>
-    suspend fun getPhotosHistoryByViews(): Result<List<Photo>>
-
     fun getPhotosHistoryFlow(): Flow<List<Photo>>
 }

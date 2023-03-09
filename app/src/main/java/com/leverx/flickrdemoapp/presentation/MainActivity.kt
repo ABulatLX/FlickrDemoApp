@@ -45,7 +45,7 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var historyViewModelFactory: HistoryViewModel.Factory
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -66,14 +66,14 @@ class MainActivity : ComponentActivity() {
             state = swipeToDismissState
         ) {
             val searchViewModel = remember(searchViewModelFactory) {
-                viewModels<SearchViewModel> { searchViewModelFactory }
+                viewModels<SearchViewModel> { searchViewModelFactory }.value
             }
-            val searchUiState: SearchScreenUiState by searchViewModel.value.uiState.collectAsState()
+            val searchUiState: SearchScreenUiState by searchViewModel.uiState.collectAsState()
 
             val historyViewModel = remember(historyViewModelFactory) {
-                viewModels<HistoryViewModel> { historyViewModelFactory }
+                viewModels<HistoryViewModel> { historyViewModelFactory }.value
             }
-            val historyUiState: HistoryScreenUiState by historyViewModel.value.uiState.collectAsState()
+            val historyUiState: HistoryScreenUiState by historyViewModel.uiState.collectAsState()
 
             Box(
                 contentAlignment = Alignment.Center
@@ -86,7 +86,8 @@ class MainActivity : ComponentActivity() {
                         MainPage.Search -> {
                             SearchScreen(
                                 uiState = searchUiState,
-                                onPhotoClicked = searchViewModel.value::viewPhoto
+                                onPhotoClicked = searchViewModel::viewPhoto,
+                                onRefresh = searchViewModel::getPhotosBySearch
                             )
                         }
                         MainPage.History -> {

@@ -35,25 +35,6 @@ class HistoryViewModel @Inject constructor(
         }
     }
 
-    suspend fun getPhotosHistoryByViews() {
-        photoRepository.getPhotosHistoryByViews()
-            .fold(
-                onSuccess = { photoList ->
-                    _uiState.value = _uiState.value.copy(
-                        isLoading = false,
-                        photoList = photoList.map { it.toUiState() }
-                    )
-                },
-                onFailure = { error ->
-                    updateErrorState(error.localizedMessage ?: "")
-                }
-            )
-    }
-
-    private fun updateErrorState(errorMessage: String) {
-        _uiState.value = _uiState.value.copy(error = errorMessage, isLoading = false)
-    }
-
     class Factory @Inject constructor(
         @FlickrPhotoApi private val repository: PhotoRepository
     ) : ViewModelProvider.Factory {

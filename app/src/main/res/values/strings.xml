@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">FlickrDemoApp</string>
+    <string name="no_photos">No photos</string>
 </resources>

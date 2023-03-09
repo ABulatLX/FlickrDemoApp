@@ -13,9 +13,6 @@ internal interface FlickrNetworkDataSource {
 
     //FAKE API
     suspend fun viewPhoto(photoId: String): Result<PhotoDto>
-    suspend fun getPhotoById(photoId: String): Result<PhotoDto>
-    suspend fun getPhotosHistoryByViews(): Result<List<PhotoDto>>
-
     fun getPhotosHistoryFlow(): Flow<List<PhotoDto>>
 }
 
@@ -59,19 +56,6 @@ internal class FlickrNetworkDataSourceImpl @Inject constructor(
             updatedViewedPhoto
         }.also {
             println(it.getOrNull())
-        }
-    }
-
-    override suspend fun getPhotoById(photoId: String): Result<PhotoDto> {
-        return runCatching {
-            viewedPhotosHistory.find { it.id == photoId }
-                ?: viewedPhotos.find { it.id == photoId }!!
-        }
-    }
-
-    override suspend fun getPhotosHistoryByViews(): Result<List<PhotoDto>> {
-        return runCatching {
-            viewedPhotosHistory.reversed()
         }
     }
 
