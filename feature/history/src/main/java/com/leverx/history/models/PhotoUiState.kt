@@ -5,7 +5,7 @@ import com.leverx.photo.Photo
 data class PhotoUiState(
     val id: String,
     val url: String,
-    val views: Int
+    val views: Int = 0
 )
 
 fun Photo.toUiState() = PhotoUiState(

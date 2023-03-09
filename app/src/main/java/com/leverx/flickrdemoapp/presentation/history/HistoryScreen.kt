@@ -16,7 +16,6 @@ import androidx.compose.ui.unit.dp
 import androidx.wear.compose.material.AutoCenteringParams
 import androidx.wear.compose.material.Scaffold
 import androidx.wear.compose.material.ScalingLazyColumn
-import androidx.wear.compose.material.Text
 import androidx.wear.compose.material.TimeText
 import androidx.wear.compose.material.Vignette
 import androidx.wear.compose.material.VignettePosition
@@ -44,14 +43,13 @@ fun HistoryScreen(
     ) {
         ScalingLazyColumn(
             modifier = modifier.fillMaxSize(),
-            autoCentering = AutoCenteringParams(itemIndex = 1),
+            autoCentering = AutoCenteringParams(itemIndex = 0),
             state = listState
         ) {
             items(items = uiState.photoList, key = { it.id }) { item ->
                 AsyncImage(
                     model = item.url,
-                    contentDescription = null,
-//                    contentDescription = "${stringResource(com.leverx.search.R.string.photo_list_item)} ${item.id}",
+                    contentDescription = "${stringResource(com.leverx.search.R.string.photo_list_item)} ${item.id}",
                     placeholder = painterResource(id = com.leverx.common.R.drawable.placeholder),
                     error = painterResource(id = com.leverx.common.R.drawable.error),
                     filterQuality = FilterQuality.Low,
@@ -69,6 +67,15 @@ fun HistoryScreen(
 
 @Preview(device = Devices.WEAR_OS_SMALL_ROUND, showSystemUi = true)
 @Composable
-fun DefaultPreview() {
-    Text("Preview Android")
+fun HistoryScreenPreview() {
+    val uiState = HistoryScreenUiState(
+        photoList = listOf(
+            com.leverx.history.models.PhotoUiState("101", "url1", 1),
+            com.leverx.history.models.PhotoUiState("102", "url2", 2),
+            com.leverx.history.models.PhotoUiState("103", "url3", 3),
+            com.leverx.history.models.PhotoUiState("104", "url4", 4),
+            com.leverx.history.models.PhotoUiState("105", "url5", 5)
+        )
+    )
+    HistoryScreen(uiState = uiState)
 }

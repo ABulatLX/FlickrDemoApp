@@ -45,7 +45,7 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var historyViewModelFactory: HistoryViewModel.Factory
-
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {

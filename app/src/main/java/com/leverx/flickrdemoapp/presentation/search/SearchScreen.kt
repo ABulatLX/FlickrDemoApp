@@ -2,6 +2,7 @@ package com.leverx.flickrdemoapp.presentation.search
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -16,7 +17,6 @@ import androidx.compose.ui.unit.dp
 import androidx.wear.compose.material.AutoCenteringParams
 import androidx.wear.compose.material.Scaffold
 import androidx.wear.compose.material.ScalingLazyColumn
-import androidx.wear.compose.material.Text
 import androidx.wear.compose.material.TimeText
 import androidx.wear.compose.material.Vignette
 import androidx.wear.compose.material.VignettePosition
@@ -45,19 +45,19 @@ fun SearchScreen(
     ) {
         ScalingLazyColumn(
             modifier = Modifier.fillMaxSize(),
-            autoCentering = AutoCenteringParams(itemIndex = 1),
+            autoCentering = AutoCenteringParams(itemIndex = 0),
             state = listState
         ) {
             items(items = uiState.photoList, key = { it.id }) { photo ->
                 AsyncImage(
                     model = photo.url,
-                    contentDescription = null,
-//                    contentDescription = "${stringResource(com.leverx.search.R.string.photo_list_item)} ${photo.id}",
+                    contentDescription = "${stringResource(com.leverx.search.R.string.photo_list_item)} ${photo.id}",
                     placeholder = painterResource(id = com.leverx.common.R.drawable.placeholder),
                     error = painterResource(id = com.leverx.common.R.drawable.error),
                     filterQuality = FilterQuality.Low,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
+                        .fillParentMaxSize()
                         .clip(RoundedCornerShape(8.dp))
                         .clickable {
                             onPhotoClicked(photo.id)
@@ -71,6 +71,14 @@ fun SearchScreen(
 
 @Preview(device = Devices.WEAR_OS_SMALL_ROUND, showSystemUi = true)
 @Composable
-fun DefaultPreview() {
-    Text("Preview Android")
+fun SearchScreenPreview() {
+    val previewPhotoList = listOf(
+        com.leverx.search.models.PhotoUiState(id = "101", url = "url1"),
+        com.leverx.search.models.PhotoUiState(id = "102", url = "url2"),
+        com.leverx.search.models.PhotoUiState(id = "103", url = "url3"),
+        com.leverx.search.models.PhotoUiState(id = "104", url = "url4"),
+        com.leverx.search.models.PhotoUiState(id = "105", url = "url5")
+    )
+    val uiState = SearchScreenUiState(photoList = previewPhotoList)
+    SearchScreen(uiState = uiState, onPhotoClicked = {})
 }
